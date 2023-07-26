@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ashish2709/content-custom-plugin.git"
+    "url": "https://github.com/ashish2709/my-custom-plugin.git"
   },
   "scripts": {
     "start": "grapesjs-cli serve",
