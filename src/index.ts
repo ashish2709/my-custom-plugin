@@ -1,11 +1,12 @@
 import type { Plugin } from 'grapesjs';
 import loadBlocks from './blocks';
+import loadComponents from './components';
 
 export type PluginOptions = {
 
   /**
    * Which blocks to add
-   * @default ['CUSTOM-TEXT-BLOCK', 'CUSTOM-IMAGE-BLOCK']
+   * @default ['CUSTOM-TEXT-INPUT', 'CUSTOM-IMAGE']
    */
   blocks?: string[];
 
@@ -24,14 +25,15 @@ const plugin: Plugin<PluginOptions> = (editor, opts = {}) => {
 
   const config: Required<PluginOptions> = {
     blocks: [
-      'CUSTOM-TEXT-BLOCK',
-      'CUSTOM-IMAGE-BLOCK'
+      'CUSTOM-TEXT-INPUT',
+      'CUSTOM-IMAGE'
     ],
     imageSrc: '',
     customDefaultText: '',
     ...opts,
   };
 
+  loadComponents(editor, config);
   loadBlocks(editor, config);
 }
 
