@@ -4,30 +4,41 @@ import { PluginOptions } from ".";
 export const typeCustomTextInput = 'CUSTOM-TEXT-INPUT';
 export const typeCustomImage = 'CUSTOM-IMAGE';
 export const typeCustomCarousel = 'CUSTOM-CAROUSEL';
+export const typeCustomButton = 'CUSTOM-BUTTON';
 
-export default (editor: Editor, opts: Required<PluginOptions>) => {
+
+const handleButtonClick = function() {
+  //@ts-ignore
+  this.onclick = function() {
+    alert('hi')
+  }
+}
+
+export default (editor: Editor, opts?: Required<PluginOptions>) => {
 
   const { Components } = editor;
-  const { customDefaultText, imageSrc } = opts;
+  // const { customDefaultText, imageSrc } = opts;
 
   Components.addType(typeCustomTextInput, {
+    isComponent: el => el.tagName === "DIV",
 
-    isComponent: el => el.tagName == 'INPUT',
-
+    extend: 'text',
     model: {
       defaults: {
-        tagName: 'input',
+        tagName: 'div',
         draggable: true,
         droppable: false,
-        attributes: {
-          type: 'text',
-          value: customDefaultText,
-        },
+        removable: true,
+        stylable: true,
+        editable: true,
+        type: 'text',
+        content: 'Insert Text here',
         style: {
           padding: '8px',
           height: '40px',
-          margin: '32px 0'
-        }
+          margin: '32px 0',
+          width: '100%'
+        },
       },
     }
   });
@@ -41,7 +52,7 @@ export default (editor: Editor, opts: Required<PluginOptions>) => {
         draggable: true,
         droppable: false,
         attributes: {
-          src: imageSrc,
+          src: '',
         },
         style: {
           width: '200px',
@@ -49,5 +60,23 @@ export default (editor: Editor, opts: Required<PluginOptions>) => {
         }
       },
     }
-  })
+  });
+
+  Components.addType(typeCustomButton, {
+    isComponent: el => el.tagName === 'BUTTON',
+
+    extend: "button",
+    model: {
+      defaults: {
+        tagName: 'button',
+        draggable: true,
+        droppable: false,
+        content: 'Click me',
+        attributes: {
+          type: 'button',
+        },
+        script: handleButtonClick
+      },
+    }
+  });
 };

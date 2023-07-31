@@ -26,14 +26,15 @@ const plugin: Plugin<PluginOptions> = (editor, opts = {}) => {
   const config: Required<PluginOptions> = {
     blocks: [
       'CUSTOM-TEXT-INPUT',
-      'CUSTOM-IMAGE'
+      'CUSTOM-IMAGE',
+      'CUSTOM-BUTTON',
     ],
     imageSrc: '',
     customDefaultText: '',
     ...opts,
   };
 
-  loadComponents(editor, config);
+  loadComponents(editor);
   loadBlocks(editor, config);
 }
 

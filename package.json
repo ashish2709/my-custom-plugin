@@ -1,6 +1,6 @@
 {
   "name": "content-custom-plugin",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "content-custom-plugin",
   "main": "dist/index.js",
   "repository": {
