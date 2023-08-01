@@ -1,6 +1,7 @@
 import type { Editor, BlockProperties } from 'grapesjs';
 import { PluginOptions } from '.';
 import {
+  typeCarousel,
   typeCustomButton,
   typeCustomImage,
   typeCustomTextInput
@@ -35,7 +36,17 @@ export default function (editor: Editor, opts: Required<PluginOptions>) {
 
   addBlock(typeCustomButton, {
     label: 'Custom Button',
+    media: '<svg width="48px" height="48px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect x="0" fill="none" width="20" height="20"/><g><path d="M17 5H3c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm1 7c0 .6-.4 1-1 1H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h14c.6 0 1 .4 1 1v5z"/></g></svg>',
     content: { type: typeCustomButton },
+    activate: true,
+    select: true,
+    category: 'Basic',
+  });
+  
+  addBlock(typeCarousel, {
+    label: 'Carousel',
+    media: '<svg fill="#000000" width="48px" height="48px" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;}</style></defs><title>carousel--horizontal</title><path d="M22,26H10a2,2,0,0,1-2-2V8a2,2,0,0,1,2-2H22a2,2,0,0,1,2,2V24A2,2,0,0,1,22,26ZM10,8V24H22V8Z"/><path d="M4,24H0V22H4V10H0V8H4a2,2,0,0,1,2,2V22A2,2,0,0,1,4,24Z"/><path d="M32,24H28a2,2,0,0,1-2-2V10a2,2,0,0,1,2-2h4v2H28V22h4Z"/><rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"/></svg>',
+    content: { type: typeCarousel },
     activate: true,
     select: true,
     category: 'Basic',

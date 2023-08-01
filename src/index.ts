@@ -28,6 +28,7 @@ const plugin: Plugin<PluginOptions> = (editor, opts = {}) => {
       'CUSTOM-TEXT-INPUT',
       'CUSTOM-IMAGE',
       'CUSTOM-BUTTON',
+      'CAROUSEL',
     ],
     imageSrc: '',
     customDefaultText: '',
