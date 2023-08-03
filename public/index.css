@@ -24,3 +24,18 @@
   top: 28px;
   left: 31px;
 }
+
+.text-and-image-container {
+  display: flex;
+  width: 50%;
+  height: 200px;
+  padding: 30px;
+  position: relative;
+  background-color: #F9F9FE;
+  gap: 1rem;
+}
+
+.text-and-image-container .ti-text-box span {
+  background-color: inherit;
+  font-weight: 500;
+}

@@ -7,6 +7,7 @@ export const typeCustomCarousel = 'CUSTOM-CAROUSEL';
 export const typeCustomButton = 'CUSTOM-BUTTON';
 export const typeCarousel = 'CAROUSEL';
 export const typeNote = 'NOTE';
+export const typeTextAndImage = 'TEXT-AND-IMAGE';
 
 const carouselChildDefaultStyle = {
   width: '100%',
@@ -123,17 +124,11 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
         tagName: 'div',
         draggable: true,
         droppable: false,
-        removable: true,
         stylable: true,
         editable: true,
+        resizable: true,
         type: 'text',
         content: 'Insert Text here',
-        style: {
-          padding: '8px',
-          height: '40px',
-          margin: '32px 0',
-          width: '100%',
-        },
       },
     }
   });
@@ -149,13 +144,23 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
         droppable: false,
         attributes: {
           src: '',
+          alt: '',
         },
-        style: {
-          width: '100%',
-          height: '100%',
-        }
       },
-    }
+    },
+
+    view: {
+      onRender({el, model}) {
+        model.listenTo(model, 'change:alt', () => {
+          const attributes = model.getAttributes();
+          const changedValue = model.getTrait('alt').changed.value;
+          model.setAttributes({
+            ...attributes,
+            alt: changedValue, 
+          })
+        });
+      },
+    },
   });
 
   Components.addType(typeCustomButton, {
@@ -343,5 +348,30 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
         }
       }
     }
-  })
+  });
+
+  Components.addType(typeTextAndImage, {
+
+    isComponent: el => el.tagName === "DIV",
+
+    extend: 'default',
+    model: {
+      defaults: {
+        tagName: 'div',
+        draggable: true,
+        dropppable: true,
+        resizable: true,
+        type: 'default',
+        attributes: {
+          class: 'text-and-image-container',
+        },
+      },
+    },
+
+    view: {
+      onRender({el, model}) {
+        model.setDragMode('')
+      }
+    }
+  });
 };

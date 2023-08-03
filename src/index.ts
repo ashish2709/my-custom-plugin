@@ -29,6 +29,7 @@ const plugin: Plugin<PluginOptions> = (editor, opts = {}) => {
       'CUSTOM-BUTTON',
       'CAROUSEL',
       'NOTE',
+      'TEXT-AND-IMAGE',
     ],
     imageSrc: '',
     customDefaultText: '',

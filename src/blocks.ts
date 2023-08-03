@@ -6,6 +6,7 @@ import {
   typeCustomImage,
   typeCustomTextInput,
   typeNote,
+  typeTextAndImage,
 } from './components';
 
 export default function (editor: Editor, opts: Required<PluginOptions>) {
@@ -20,7 +21,6 @@ export default function (editor: Editor, opts: Required<PluginOptions>) {
     activate: true,
     select: true,
     category: 'Basic',
-    // ...opts,
   }
 
   addBlock(typeCustomTextInput, {
@@ -41,9 +41,9 @@ export default function (editor: Editor, opts: Required<PluginOptions>) {
     label: 'Custom Button',
     media: '<svg width="48px" height="48px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect x="0" fill="none" width="20" height="20"/><g><path d="M17 5H3c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm1 7c0 .6-.4 1-1 1H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h14c.6 0 1 .4 1 1v5z"/></g></svg>',
     content: { type: typeCustomButton },
-   ...commonBlockOptions,
+    ...commonBlockOptions,
   });
-  
+
   addBlock(typeCarousel, {
     label: 'Carousel',
     media: '<svg fill="#000000" width="48px" height="48px" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg"><defs><style>.cls-1{fill:none;}</style></defs><title>carousel--horizontal</title><path d="M22,26H10a2,2,0,0,1-2-2V8a2,2,0,0,1,2-2H22a2,2,0,0,1,2,2V24A2,2,0,0,1,22,26ZM10,8V24H22V8Z"/><path d="M4,24H0V22H4V10H0V8H4a2,2,0,0,1,2,2V22A2,2,0,0,1,4,24Z"/><path d="M32,24H28a2,2,0,0,1-2-2V10a2,2,0,0,1,2-2h4v2H28V22h4Z"/><rect id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" class="cls-1" width="32" height="32"/></svg>',
@@ -55,6 +55,23 @@ export default function (editor: Editor, opts: Required<PluginOptions>) {
     label: 'Note',
     media: '<svg viewBox="0 0 24 24" width="48px" height="48px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 12H14M12 10V14M19.9592 15H16.6C16.0399 15 15.7599 15 15.546 15.109C15.3578 15.2049 15.2049 15.3578 15.109 15.546C15 15.7599 15 16.0399 15 16.6V19.9592M20 14.1031V7.2C20 6.07989 20 5.51984 19.782 5.09202C19.5903 4.71569 19.2843 4.40973 18.908 4.21799C18.4802 4 17.9201 4 16.8 4H7.2C6.0799 4 5.51984 4 5.09202 4.21799C4.71569 4.40973 4.40973 4.71569 4.21799 5.09202C4 5.51984 4 6.0799 4 7.2V16.8C4 17.9201 4 18.4802 4.21799 18.908C4.40973 19.2843 4.71569 19.5903 5.09202 19.782C5.51984 20 6.0799 20 7.2 20H14.1031C14.5923 20 14.8369 20 15.067 19.9447C15.2711 19.8957 15.4662 19.8149 15.6451 19.7053C15.847 19.5816 16.0199 19.4086 16.3658 19.0627L19.0627 16.3658C19.4086 16.0199 19.5816 15.847 19.7053 15.6451C19.8149 15.4662 19.8957 15.2711 19.9447 15.067C20 14.8369 20 14.5923 20 14.1031Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>',
     content: { type: typeNote },
-   ...commonBlockOptions,
-  })
+    ...commonBlockOptions,
+  });
+
+  addBlock(typeTextAndImage, {
+    label: 'Text And Image',
+    media: '<svg width="48px" height="48px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3.00463 21L16 8L21.0023 12.1701M3.00463 21C3.00463 21 9.9675 21 12.0039 21C16.9176 21 20.9117 17.0622 21.0023 12.1701M3.00463 21C3.00463 21 4.56382 17.2561 3.93982 16.0008C3.34076 14.7956 3.00391 13.4372 3.00391 12C3.00391 7.02944 7.03334 3 12.0039 3C16.9745 3 21.0039 7.02944 21.0039 12C21.0039 12.0568 21.0034 12.1135 21.0023 12.1701M11 13.0018L7.5 10L3.26826 14.1741" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>',
+    content: {
+      type: typeTextAndImage,
+      components: [
+        {
+          type: typeCustomTextInput,
+        },
+        {
+          type: typeCustomImage,
+        }
+      ]
+    },
+    ...commonBlockOptions,
+  });
 };
