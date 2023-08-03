@@ -1,4 +1,4 @@
-import type { Editor, ComponentManager } from "grapesjs";
+import type { Editor } from "grapesjs";
 import { PluginOptions } from ".";
 
 export const typeCustomTextInput = 'CUSTOM-TEXT-INPUT';
@@ -6,99 +6,113 @@ export const typeCustomImage = 'CUSTOM-IMAGE';
 export const typeCustomCarousel = 'CUSTOM-CAROUSEL';
 export const typeCustomButton = 'CUSTOM-BUTTON';
 export const typeCarousel = 'CAROUSEL';
+export const typeNote = 'NOTE';
 
 const carouselChildDefaultStyle = {
   width: '100%',
-  height: '400px',
+  height: '100%',
   flex: '1',
   border: '1px solid green',
 };
 
+const attachEventListenerToButtons = function (props: {
+  numSlides: string
+}) {
 
-const handleCarouselButtonLogic = function (
-  action: string,
-  nextSlideIndex: Number,
-  numSlides: Number,
-  DomComponents: ComponentManager,
-) {
+  const { numSlides } = props;
 
-  const prevBtnAttributes = DomComponents?.getWrapper()?.find(`#carousel-prev-btn`)[0].getAttributes();
-  const nextBtnAttributes = DomComponents?.getWrapper()?.find(`#carousel-next-btn`)[0].getAttributes();
-    
+  let numberOfSlides: number = parseInt(numSlides);
+  let currentSlideIndex = 1;
 
-  if ((action === 'prev' || action === 'init') && nextSlideIndex === 0) {
-    DomComponents?.getWrapper()?.find(`#carousel-prev-btn`)[0].setAttributes({
-      ...prevBtnAttributes,
-      disabled: true,
-      currentSlide: nextSlideIndex,
-    });
-    DomComponents?.getWrapper()?.find(`#carousel-next-btn`)[0].setAttributes({
-      ...nextBtnAttributes,
-      disabled: false,
-      currentSlide: nextSlideIndex,
-    });
-  } else if (action === 'next' && nextSlideIndex === numSlides) {
-    DomComponents?.getWrapper()?.find(`#carousel-next-btn`)[0].setAttributes({
-      ...nextBtnAttributes,
-      disabled: true,
-      currentSlide: nextSlideIndex,
-    });
-    DomComponents?.getWrapper()?.find(`#carousel-prev-btn`)[0].setAttributes({
-      ...prevBtnAttributes,
-      disabled: false,
-      currentSlide: nextSlideIndex,
-    });
+  const prevButton = document.getElementById('carousel-prev-btn');
+  const nextButton = document.getElementById('carousel-next-btn');
+
+  const handleCarouselButtonLogic = function (
+    action: string,
+    nextSlideIndex: Number,
+    numSlides: Number,
+  ) {
+
+    const prevBtn = document.getElementById(`carousel-prev-btn`);
+    const nextBtn = document.getElementById(`carousel-next-btn`);
+
+    if (action === 'prev' && nextSlideIndex === 1) {
+      prevBtn?.setAttribute("disabled", "true");
+      nextBtn?.removeAttribute("disabled");
+    } else if (action === 'next' && nextSlideIndex === numSlides) {
+      prevBtn?.removeAttribute("disabled");
+      nextBtn?.setAttribute("disabled", "true");
+    }
+  };
+
+  const carouselSlideShowHideLogic = function (
+    currentSlideIndex: number,
+    nextSlideIndex: number,
+  ) {
+
+    const currentSlide = document.getElementById(`carousel-child-div-${currentSlideIndex}`);
+    const nextSlide = document.getElementById(`carousel-child-div-${nextSlideIndex}`);
+
+    if (currentSlide && nextSlide) {
+      currentSlide.style.display = 'none';
+      nextSlide.style.display = 'block';
+    }
   }
-}
 
-const handleButtonClick = function (DomComponents: ComponentManager, model: any) {
+  const handleButtonClick = function (props: {
+    action: string,
+    numberOfSlides: number,
+    currentSlideIndex: number,
+  }) {
 
-  const currentSlideIndex = model.attributes.attributes.currentSlide;
-  const numSlides = model.parent().attributes.numSlides;
-  const action = model.attributes.attributes.buttonType;
-  let nextSlideIndex = currentSlideIndex;
+    let { action, currentSlideIndex, numberOfSlides } = props;
 
-  if (action === 'next' && nextSlideIndex <= numSlides) {
+    let nextSlideIndex = currentSlideIndex;
 
-    nextSlideIndex = parseInt(currentSlideIndex) + 1;
-    handleCarouselButtonLogic(action, nextSlideIndex, numSlides-1, DomComponents);
-    const currentSlide = DomComponents?.getWrapper()?.find(`#carousel-child-div-${currentSlideIndex}`)[0];
-    const nextSlide = DomComponents?.getWrapper()?.find(`#carousel-child-div-${nextSlideIndex}`)[0];
+    if (action === 'next' && nextSlideIndex <= numberOfSlides) {
+      nextSlideIndex = currentSlideIndex + 1;
+      handleCarouselButtonLogic(action, nextSlideIndex, numberOfSlides);
+      carouselSlideShowHideLogic(currentSlideIndex, nextSlideIndex);
+      updateCurrentSlideIndex(nextSlideIndex);
 
-    currentSlide?.setStyle({
-      ...carouselChildDefaultStyle,
-      display: 'none',
-    });
-    nextSlide?.setStyle({
-      ...carouselChildDefaultStyle,
-      display: 'block',
-    });
-
-  } else if (action === 'prev' && nextSlideIndex >= 0) {
-
-    nextSlideIndex = parseInt(currentSlideIndex) - 1;
-    handleCarouselButtonLogic(action, nextSlideIndex, numSlides-1, DomComponents);
-    const currentSlide = DomComponents?.getWrapper()?.find(`#carousel-child-div-${currentSlideIndex}`)[0];
-    const nextSlide = DomComponents?.getWrapper()?.find(`#carousel-child-div-${nextSlideIndex}`)[0];
-
-    currentSlide?.setStyle({
-      ...carouselChildDefaultStyle,
-      display: 'none',
-    });
-    nextSlide?.setStyle({
-      ...carouselChildDefaultStyle,
-      display: 'block',
-    });
+    } else if (action === 'prev' && nextSlideIndex >= 0) {
+      nextSlideIndex = currentSlideIndex - 1;
+      handleCarouselButtonLogic(action, nextSlideIndex, numberOfSlides);
+      carouselSlideShowHideLogic(currentSlideIndex, nextSlideIndex);
+      updateCurrentSlideIndex(nextSlideIndex);
+    }
   }
-}
+
+  const updateCurrentSlideIndex = (value: number) => currentSlideIndex = value;
+
+  prevButton?.addEventListener("click", event => {
+    const handlerProps = {
+      action: 'prev',
+      numberOfSlides,
+      currentSlideIndex,
+    }
+    console.log('nextBtn', handlerProps)
+    handleButtonClick(handlerProps);
+  }, true);
+
+  nextButton?.addEventListener("click", event => {
+    const handlerProps = {
+      action: 'next',
+      numberOfSlides,
+      currentSlideIndex,
+    }
+    console.log('nextBtn', handlerProps)
+    handleButtonClick(handlerProps);
+  }, true);
+};
 
 export default (editor: Editor, opts?: Required<PluginOptions>) => {
 
   const {
     Components,
-    DomComponents,
   } = editor;
-  // const { customDefaultText, imageSrc } = opts;
+
+  editor.setStyle('./index.css');
 
   Components.addType(typeCustomTextInput, {
     isComponent: el => el.tagName === "DIV",
@@ -118,7 +132,7 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
           padding: '8px',
           height: '40px',
           margin: '32px 0',
-          width: '100%'
+          width: '100%',
         },
       },
     }
@@ -159,11 +173,6 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
         },
       },
     },
-    view: {
-      init() {
-        this.el.onclick = () => handleButtonClick(DomComponents, this.model);
-      },
-    },
   });
 
   Components.addType(typeCarousel, {
@@ -172,23 +181,22 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
     model: {
       defaults: {
         tagName: 'div',
+        script: attachEventListenerToButtons,
         draggable: true,
         droppable: true,
+        resizable: true,
+        numSlides: 0,
         attributes: {
-          numSlides: 0,
           id: 'carousel-div',
         },
         style: {
           width: '400px',
           height: 'auto',
-          position: 'absolute',
-          transform: 'translate(50%, -50%)',
           border: '1px solid black',
-          top: '50%',
-          right: '50%',
           display: 'flex',
           padding: '1rem',
           gap: '1rem',
+          position: 'relative',
         },
 
         components: [
@@ -219,37 +227,121 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
             },
             content: 'Next',
           }
-        ]
-      },
+        ],
 
-      init() {
-        if (!this.attributes.numSlides) {
-          const value: string | null = prompt('How many slides do you want?');
-
-          if (value) {
-            this.attributes.numSlides = parseInt(value);
+        traits: [
+          {
+            type: "number",
+            name: "numSlides",
+            changeProp: true,
+            placeholder: "Number of slides",
           }
-        }
-        this.handleCarouselInit(this.attributes.numSlides);
+        ],
+
+        "script-props": ["numSlides"],
+      },
+    },
+
+    view: {
+      init() {
+        this.listenTo(this.model, 'change:numSlides', this.updateSlideCount);
       },
 
-      handleCarouselInit(numSlides: Number) {
-        for (let i = 0; i < numSlides; i++) {
-          this?.append({
-            tagName: 'div',
-            draggable: false,
-            droppable: true,
-            attributes: {
-              id: `carousel-child-div-${i}`,
-            },
-            style: {
-              ...carouselChildDefaultStyle,
-              display: i === 0 ? 'block' : 'none',
-            },
-            content: `Drag & Drop the block to add to slide ${i}`,
-          });
-        }
+      updateSlideCount() {
+        const numSlides = parseInt(this.model.get('numSlides'));
+        this.model.append({
+          tagName: 'div',
+          draggable: false,
+          droppable: true,
+          attributes: {
+            id: `carousel-child-div-${numSlides}`,
+          },
+          style: {
+            ...carouselChildDefaultStyle,
+            display: numSlides === 1 ? 'block' : 'none',
+          },
+          content: `Drag & Drop the block to add to slide ${numSlides}`,
+        });
       }
     },
   });
+
+  Components.addType(typeNote, {
+    isComponent: el => el.tagName === "DIV",
+
+    extend: 'text',
+    model: {
+      defaults: {
+        tagName: 'div',
+        draggable: true,
+        dropppable: true,
+        resizable: true,
+        editable: false,
+        type: 'text',
+        attributes: {
+          class: 'note-container',
+        },
+      },
+    },
+    view: {
+      onRender({ el, model }) {
+        const allComponentsById = model.__getAllById();
+        let isIconAndTextPresent = false;
+        let addTextComponent = false;
+
+        Object.keys(allComponentsById).forEach(key => {
+          if (key === "note-icon" || key === "note-text") {
+            isIconAndTextPresent = true;
+          }
+        });
+
+        if (allComponentsById['note-text'] && !allComponentsById['note-text'].attributes.content) {
+          addTextComponent = true;
+        } else {
+          addTextComponent = false;
+        }
+
+        if (!isIconAndTextPresent) {
+          model.append({
+            tagName: 'icon',
+            draggable: false,
+            droppable: false,
+            type: 'icon',
+            editable: false,
+            attributes: {
+              id: 'note-icon',
+            },
+            content:
+              '<svg class="note-info-icon" viewBox="0 0 24 24" width="24px" height="24px" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="12" r="10" stroke="#1C274C" stroke-width="1.5"></circle> <path d="M12 17V11" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"></path> <circle cx="1" cy="1" r="1" transform="matrix(1 0 0 -1 11 9)" fill="#1C274C"></circle> </g></svg>',
+          });
+
+          model.append({
+            tagName: 'div',
+            draggable: false,
+            droppable: false,
+            editable: true,
+            type: 'text',
+            attributes: {
+              id: 'note-text',
+            },
+            content: 'Enter text here...',
+          });
+        }
+
+        if (addTextComponent) {
+          model.append({
+            tagName: 'div',
+            draggable: false,
+            droppable: false,
+            editable: true,
+            type: 'text',
+            attributes: {
+              id: 'note-text',
+            },
+            content: 'Enter text here...',
+          });
+        }
+      }
+    }
+  })
 };

@@ -6,7 +6,6 @@ export type PluginOptions = {
 
   /**
    * Which blocks to add
-   * @default ['CUSTOM-TEXT-INPUT', 'CUSTOM-IMAGE']
    */
   blocks?: string[];
 
@@ -29,6 +28,7 @@ const plugin: Plugin<PluginOptions> = (editor, opts = {}) => {
       'CUSTOM-IMAGE',
       'CUSTOM-BUTTON',
       'CAROUSEL',
+      'NOTE',
     ],
     imageSrc: '',
     customDefaultText: '',

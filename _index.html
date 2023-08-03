@@ -8,6 +8,7 @@
   <link href="grapesjs-project-manager.min.css" rel="stylesheet">
   <script src="grapesjs-project-manager.min.js"></script>
   <script src="https://unpkg.com/grapesjs"></script>
+  <script src="https://unpkg.com/grapesjs-plugin-export"></script>
   <style>
     body,
     html {
@@ -37,24 +38,39 @@
         fromElement: true,
         pageManager: true,
         noticeOnUnload: false,
+        allowScripts: 1,
+        dragMode: 'absolute',
         storageManager: {
           type: 'indexeddb',
           autosave: true,
           autoload: true,
         },
-        plugins: ['content-custom-plugin', 'grapesjs-project-manager'],
+        plugins: [
+          'content-custom-plugin',
+          'grapesjs-project-manager',
+          'grapesjs-plugin-export',
+        ],
         pluginsOpts: {
           'content-custom-plugin': {
             blocks: [
-              'CUSTOM-TEXT-INPUT', 
-              'CUSTOM-IMAGE', 
+              'CUSTOM-TEXT-INPUT',
+              'CUSTOM-IMAGE',
               'CUSTOM-BUTTON',
-              'CAROUSEL',
+              // 'CAROUSEL',
+              'NOTE',
             ],
-            customDefaultText: 'Hi',
-            imageSrc: 'sample.jpeg'
           },
+
+          'grapesjs-plugin-export': {
+            'btnLabel': 'Export code',
+            'filenamePfx': 'my-custom-plugin'
+          }
         },
+        canvas: {
+          styles: [
+            'http://localhost:8080/index.css'
+          ]
+        }
       });
 
       const pn = editor.Panels;

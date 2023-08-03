@@ -1,0 +1,26 @@
+.note-container {
+  width: 50%;
+  height: 200px;
+  position: relative;
+  padding: 30px;
+  border: 2px solid #00e676;
+  outline: none;
+  border-radius: 12px;
+  background-color: #00e6761c;
+}
+
+.note-container #note-text {
+  margin-left: 56px;
+  font-weight: 600;
+}
+
+.note-container #note-text span {
+  font-weight: 600;
+  background-color: inherit;
+}
+
+.note-container #note-icon {
+  position: absolute;
+  top: 28px;
+  left: 31px;
+}
