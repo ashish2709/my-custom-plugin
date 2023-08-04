@@ -39,3 +39,28 @@
   background-color: inherit;
   font-weight: 500;
 }
+
+.numbered-list-container {
+  width: 50%;
+  height: 200px;
+}
+
+.numbered-list-container .each-list {
+  position: relative;
+  padding: 30px;
+}
+
+.numbered-list-container .list-text {
+  margin-left: 32px;
+} 
+
+.numbered-list-container .list-count {
+  position: absolute;
+  top: 24px;
+  left: 15px;
+  padding: 7px 13px;
+  background-color: #43a047d9;
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 600;
+}

@@ -30,6 +30,7 @@ const plugin: Plugin<PluginOptions> = (editor, opts = {}) => {
       'CAROUSEL',
       'NOTE',
       'TEXT-AND-IMAGE',
+      'NUMBERED-LIST',
     ],
     imageSrc: '',
     customDefaultText: '',

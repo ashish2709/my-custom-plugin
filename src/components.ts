@@ -8,6 +8,7 @@ export const typeCustomButton = 'CUSTOM-BUTTON';
 export const typeCarousel = 'CAROUSEL';
 export const typeNote = 'NOTE';
 export const typeTextAndImage = 'TEXT-AND-IMAGE';
+export const typeNumberedList = 'NUMBERED-LIST';
 
 const carouselChildDefaultStyle = {
   width: '100%',
@@ -150,13 +151,13 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
     },
 
     view: {
-      onRender({el, model}) {
+      onRender({ el, model }) {
         model.listenTo(model, 'change:alt', () => {
           const attributes = model.getAttributes();
           const changedValue = model.getTrait('alt').changed.value;
           model.setAttributes({
             ...attributes,
-            alt: changedValue, 
+            alt: changedValue,
           })
         });
       },
@@ -369,9 +370,84 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
     },
 
     view: {
-      onRender({el, model}) {
+      onRender({ el, model }) {
         model.setDragMode('')
       }
     }
   });
+
+  Components.addType(typeNumberedList, {
+    isComponent: el => el.tagName === "DIV",
+
+    extend: 'default',
+    model: {
+      defaults: {
+        tagName: 'div',
+        draggable: true,
+        droppable: false,
+        resizable: true,
+        editable: false,
+        listItems: '',
+        contentArray: [],
+        attributes: {
+          class: 'numbered-list-container'
+        },
+        type: 'default',
+        traits: [
+          {
+            label: 'Number of List Items',
+            name: 'listItems',
+            type: 'number',
+            placeholder: 'Number of elements in list',
+            min: 1,
+          }
+        ]
+      }
+    },
+
+    view: {
+      onRender({ el, model }) {
+        model.on('change:attributes:listItems', () => {
+          const itemCount: number = parseInt(model.getAttributes()['listItems']);
+
+          model.append({
+            tagName: 'div',
+            draggable: false,
+            droppable: false,
+            editable: true,
+            removable: false,
+            type: 'default',
+            attributes: {
+              id: `list-${itemCount}`,
+              class: 'each-list'
+            },
+
+            components: [
+              {
+                type: typeCustomTextInput,
+                attributes: {
+                  id: `each-list-${itemCount}`,
+                  class: 'list-text'
+                },
+                content: 'Enter text here...',
+              },
+              {
+                tagName: 'div',
+                draggable: false,
+                droppable: false,
+                type: 'default',
+                editable: false,
+                attributes: {
+                  id: `list-count-${itemCount}`,
+                  class: 'list-count'
+                },
+                content: itemCount,
+                removable: false,
+              }
+            ]
+          });
+        });
+      }
+    }
+  })
 };
