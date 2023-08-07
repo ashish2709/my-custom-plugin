@@ -1,5 +1,4 @@
 .note-container {
-  width: 50%;
   height: 200px;
   position: relative;
   padding: 30px;
@@ -27,7 +26,6 @@
 
 .text-and-image-container {
   display: flex;
-  width: 50%;
   height: 200px;
   padding: 30px;
   position: relative;
@@ -41,7 +39,6 @@
 }
 
 .numbered-list-container {
-  width: 50%;
   height: 200px;
 }
 
@@ -63,4 +60,8 @@
   color: #fff;
   border-radius: 50%;
   font-weight: 600;
+}
+
+.quiz-container {
+  height: 200px;
 }
