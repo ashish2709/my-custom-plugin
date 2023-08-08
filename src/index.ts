@@ -31,6 +31,8 @@ const plugin: Plugin<PluginOptions> = (editor, opts = {}) => {
       'NOTE',
       'TEXT-AND-IMAGE',
       'NUMBERED-LIST',
+      'QUIZ',
+      'SCORM-BUTTON',
     ],
     imageSrc: '',
     customDefaultText: '',

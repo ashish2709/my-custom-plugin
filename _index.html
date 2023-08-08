@@ -53,14 +53,15 @@
         pluginsOpts: {
           'content-custom-plugin': {
             blocks: [
-              'CUSTOM-TEXT-INPUT',
-              'CUSTOM-IMAGE',
-              'CUSTOM-BUTTON',
-              'NOTE',
-              'TEXT-AND-IMAGE',
-              'NUMBERED-LIST',
-              'QUIZ',
+              // 'CUSTOM-TEXT-INPUT',
+              // 'CUSTOM-IMAGE',
+              // 'CUSTOM-BUTTON',
+              // 'NOTE',
+              // 'TEXT-AND-IMAGE',
+              // 'NUMBERED-LIST',
+              // 'QUIZ',
               // 'CAROUSEL',
+              'SCORM-BUTTON'
             ],
           },
 
@@ -72,6 +73,9 @@
         canvas: {
           styles: [
             'http://localhost:8080/index.css'
+          ],
+          scripts: [
+            'http://localhost:8080/scormfunctions.js',
           ]
         }
       });

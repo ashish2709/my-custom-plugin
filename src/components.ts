@@ -1,3 +1,5 @@
+
+//@ts-nocheck
 import type { Editor } from "grapesjs";
 import { PluginOptions } from ".";
 
@@ -9,6 +11,9 @@ export const typeCarousel = 'CAROUSEL';
 export const typeNote = 'NOTE';
 export const typeTextAndImage = 'TEXT-AND-IMAGE';
 export const typeNumberedList = 'NUMBERED-LIST';
+export const typeQuiz = 'QUIZ';
+export const typeRadio = 'RADIO-BUTTON';
+export const typeScormButton = 'SCORM-BUTTON';
 
 const carouselChildDefaultStyle = {
   width: '100%',
@@ -108,13 +113,38 @@ const attachEventListenerToButtons = function (props: {
   }, true);
 };
 
+const handleRadioButton = function (props: {
+  option_value: string
+}) {
+  console.log('script: radio ', props.option_value);
+
+  document.querySelectorAll('.radio-button').forEach(item => {
+    console.log(item)
+  })
+};
+
+const scormButtonClickHandler = function(this: any) {
+  // const button = document.getElementById('scorm-button');
+  this.addEventListener("click", function(event: any) {
+    console.log('hello')
+    
+    ScormProcessSetValue("cmi.completion_status", "completed");
+    
+    ScormProcessSetValue("cmi.score.raw", 18);
+    ScormProcessSetValue("cmi.score.min", "0");
+    ScormProcessSetValue("cmi.score.max", "100");
+    ScormProcessSetValue("cmi.score.scaled", 0.18);
+    ScormProcessTerminate();
+    // cmi.completion_status("completed");
+    // cmi.exit();
+  });
+};
+
 export default (editor: Editor, opts?: Required<PluginOptions>) => {
 
   const {
     Components,
   } = editor;
-
-  editor.setStyle('./index.css');
 
   Components.addType(typeCustomTextInput, {
     isComponent: el => el.tagName === "DIV",
@@ -449,5 +479,192 @@ export default (editor: Editor, opts?: Required<PluginOptions>) => {
         });
       }
     }
-  })
+  });
+
+  Components.addType(typeRadio, {
+    isComponent: el => el.tagName === "INPUT",
+
+    extend: 'input',
+    model: {
+      defaults: {
+        tagName: 'input',
+        draggable: false,
+        droppable: false,
+        removable: false,
+        option_value: '',
+        type: 'input',
+        script: handleRadioButton,
+        attributes: {
+          class: 'radio-button',
+          type: 'radio',
+        },
+        traits: [
+          {
+            label: 'Option Value',
+            type: 'text',
+            changeProp: true,
+            name: 'option_value'
+          },
+        ],
+        'script-props': ["option_value"]
+      }
+    }
+  });
+
+  Components.addType(typeQuiz, {
+    isComponent: el => el.tagName === 'DIV',
+
+    extend: 'default',
+    model: {
+      defaults: {
+        tagName: 'div',
+        draggable: true,
+        droppable: true,
+        removable: true,
+        correct_option: '',
+        num_options: 2,
+        resizable: true,
+        type: 'default',
+        attributes: {
+          class: 'quiz-container'
+        },
+        traits: [
+          {
+            label: 'Correct Answer',
+            name: 'correct_option',
+            type: 'string',
+            changeProp: true,
+          },
+          {
+            label: 'Number of Options',
+            name: 'num_options',
+            type: 'number',
+            min: 2,
+            changeProp: true,
+          }
+        ],
+      },
+    },
+    view: {
+      init() {
+        this.model.append({
+          tagName: 'div',
+          draggable: false,
+          droppable: false,
+          resizable: true,
+          type: 'default',
+          components: [
+            {
+              type: typeRadio,
+              draggable: true,
+              droppable: false,
+              removable: false,
+              attributes: {
+                class: 'radio-btn',
+              }
+            },
+            {
+              type: typeCustomTextInput,
+              droppable: false,
+              draggable: true,
+              removable: false,
+              attributes: {
+                class: 'radio-option-label',
+              },
+              content: 'Enter option label'
+            }
+          ]
+        });
+
+        this.model.append({
+          tagName: 'div',
+          draggable: false,
+          droppable: false,
+          resizable: true,
+          type: 'default',
+          components: [
+            {
+              type: typeRadio,
+              draggable: true,
+              droppable: false,
+              removable: false,
+              attributes: {
+                class: 'radio-btn',
+              }
+            },
+            {
+              type: typeCustomTextInput,
+              droppable: false,
+              draggable: true,
+              removable: false,
+              attributes: {
+                class: 'radio-option-label',
+              },
+              content: 'Enter option label',
+            }
+          ]
+        });
+      },
+
+      onRender({ el, model }) {
+        model.on('change:num_options', () => {
+          const numOptions = model.attributes.num_options;
+          const componentsLength = model.components().length;
+
+          if (numOptions > componentsLength) {
+            model.append({
+              tagName: 'div',
+              draggable: false,
+              droppable: false,
+              resizable: true,
+              type: 'default',
+              components: [
+                {
+                  type: typeRadio,
+                  draggable: true,
+                  droppable: false,
+                  removable: false,
+                  attributes: {
+                    class: 'radio-btn',
+                  }
+                },
+                {
+                  type: typeCustomTextInput,
+                  droppable: false,
+                  draggable: true,
+                  removable: false,
+                  attributes: {
+                    class: 'radio-option-label',
+                  },
+                  content: 'Enter option label',
+                }
+              ]
+            });
+          }else {
+            const lastComponentModel = model.components().models[model.components().length-1];
+            model.components().remove(lastComponentModel);
+          }
+        });
+      },
+    }
+  });
+
+  Components.addType(typeScormButton, {
+    isComponent: el => el.tagName === 'BUTTON',
+
+    extend: "button",
+    model: {
+      defaults: {
+        tagName: 'button',
+        script: scormButtonClickHandler,
+        draggable: true,
+        droppable: false,
+        content: 'Set score 100',
+        attributes: {
+          type: 'button',
+          id: 'scorm-button'
+        },
+      },
+    },
+  });
 };
